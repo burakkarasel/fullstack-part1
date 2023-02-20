@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const App = () => {
   const course = {
     name: "Half Stack application development",
@@ -8,41 +10,65 @@ export const App = () => {
     ],
   };
   console.log(course);
+
+  const [counter, setCounter] = useState(0);
+
+  const increaseByOne = () => setCounter(counter + 1);
+  const decreaseByOne = () => setCounter(counter - 1);
+  const resetCounter = () => setCounter(0);
+
   return (
     <div className="App">
-      <Header course={course.name} />
+      <Header courseName={course.name} />
       <Content content={course.parts} />
       <Total content={course.parts} />
+      <DisplayCounter counter={counter} />
+      <CounterButton onClick={increaseByOne} text={"increase"} />
+      <CounterButton onClick={resetCounter} text={"reset"} />
+      <CounterButton onClick={decreaseByOne} text={"decrease"} />
     </div>
   );
 };
 
-const Header = (props) => {
-  return <h1>{props.course}</h1>;
+const Header = ({ courseName }) => {
+  console.log(courseName);
+  return <h1>{courseName}</h1>;
 };
 
-const Content = (props) => {
+const Content = ({ content }) => {
   return (
     <div>
-      {props.content.map((part, idx) => (
+      {content.map((part, idx) => (
         <Part name={part.name} exercises={part.exercises} key={idx} />
       ))}
     </div>
   );
 };
 
-const Total = (props) => {
+const Total = ({ content }) => {
+  console.log(content);
+  return (
+    <p>Number of exercises {content.reduce((a, t) => a + t.exercises, 0)}</p>
+  );
+};
+
+const Part = ({ name, exercises }) => {
   return (
     <p>
-      Number of exercises {props.content.reduce((a, t) => a + t.exercises, 0)}
+      {name} {exercises}
     </p>
   );
 };
 
-const Part = (props) => {
+const DisplayCounter = ({ counter }) => {
+  console.log(counter);
   return (
-    <p>
-      {props.name} {props.exercises}
-    </p>
+    <div>
+      <h3>{counter}</h3>
+    </div>
   );
+};
+
+const CounterButton = ({ onClick, text }) => {
+  return <button onClick={onClick}>{text}</button>;
 };
